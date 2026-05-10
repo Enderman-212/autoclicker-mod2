@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "autoclicker",
+  "version": "1.0.0",
+  "name": "AutoClicker",
+  "description": "Auto clicker mod - toggle with CapsLock, 20 CPS",
+  "authors": ["Claude"],
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.autoclicker.mod.AutoClickerClient"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.14.0",
+    "minecraft": "~1.21.1",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}
