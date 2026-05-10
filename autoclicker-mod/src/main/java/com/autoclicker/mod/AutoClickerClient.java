@@ -13,7 +13,7 @@ public class AutoClickerClient implements ClientModInitializer {
     private boolean autoClickEnabled = false;
     private boolean capsLockWasPressed = false;
     private int tickCounter = 0;
-    private static final int TICKS_PER_CLICK = 2;
+    private static final int TICKS_PER_CLICK = 1;
 
     @Override
     public void onInitializeClient() {
@@ -43,7 +43,9 @@ public class AutoClickerClient implements ClientModInitializer {
                 ClientPlayerInteractionManager manager = client.interactionManager;
                 if (manager != null && client.crosshairTarget != null) {
                     client.options.attackKey.setPressed(true);
-                    manager.attackEntity(client.player, client.targetedEntity != null ? client.targetedEntity : client.player);
+                    if (client.targetedEntity != null) {
+                        manager.attackEntity(client.player, client.targetedEntity);
+                    }
                     client.player.swingHand(Hand.MAIN_HAND);
                     client.options.attackKey.setPressed(false);
                 }
