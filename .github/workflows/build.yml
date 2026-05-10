@@ -12,10 +12,12 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
-      - name: Grant execute permission for gradlew
-        run: chmod +x autoclicker-mod/gradlew
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: '8.8'
       - name: Build with Gradle
-        run: cd autoclicker-mod && ./gradlew build
+        run: cd autoclicker-mod && gradle build
       - uses: actions/upload-artifact@v4
         with:
           name: autoclicker-mod
