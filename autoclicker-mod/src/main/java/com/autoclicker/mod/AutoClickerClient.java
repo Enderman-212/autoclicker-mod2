@@ -3,7 +3,9 @@ package com.autoclicker.mod;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.text.Text;
+import net.minecraft.util.Hand;
 import org.lwjgl.glfw.GLFW;
 
 public class AutoClickerClient implements ClientModInitializer {
@@ -38,7 +40,13 @@ public class AutoClickerClient implements ClientModInitializer {
             tickCounter++;
             if (tickCounter >= TICKS_PER_CLICK) {
                 tickCounter = 0;
-                client.doAttack();
+                ClientPlayerInteractionManager manager = client.interactionManager;
+                if (manager != null && client.crosshairTarget != null) {
+                    client.options.attackKey.setPressed(true);
+                    manager.attackEntity(client.player, client.targetedEntity != null ? client.targetedEntity : client.player);
+                    client.player.swingHand(Hand.MAIN_HAND);
+                    client.options.attackKey.setPressed(false);
+                }
             }
         }
     }
