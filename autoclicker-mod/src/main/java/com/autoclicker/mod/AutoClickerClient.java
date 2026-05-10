@@ -4,35 +4,19 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
-
 import org.lwjgl.glfw.GLFW;
-import java.awt.Robot;
-import java.awt.AWTException;
-import java.awt.event.InputEvent;
 
 public class AutoClickerClient implements ClientModInitializer {
 
     private boolean autoClickEnabled = false;
     private boolean capsLockWasPressed = false;
     private int tickCounter = 0;
-
-    // 20 CPS = 1 click every 3 ticks (game runs at 20 TPS, but client ticks faster)
-    // We'll use a timer approach: 20 clicks per second = click every 50ms
-    // At 20 TPS (client tick), 1 tick = 50ms, so click every tick
-    private static final int TICKS_PER_CLICK = 1; // 1 tick = 50ms = 20 CPS
-
-    private Robot robot;
+    private static final int TICKS_PER_CLICK = 1;
 
     @Override
     public void onInitializeClient() {
-        try {
-            robot = new Robot();
-        } catch (AWTException e) {
-            System.err.println("[AutoClicker] Failed to initialize Robot: " + e.getMessage());
-        }
-
         ClientTickEvents.END_CLIENT_TICK.register(this::onClientTick);
-        System.out.println("[AutoClicker] AutoClicker mod loaded! Press CapsLock to toggle.");
+        System.out.println("[AutoClicker] Loaded! Press CapsLock to toggle 20 CPS.");
     }
 
     private void onClientTick(MinecraftClient client) {
@@ -40,7 +24,6 @@ public class AutoClickerClient implements ClientModInitializer {
 
         long window = client.getWindow().getHandle();
 
-        // Detect CapsLock key press (rising edge detection)
         int capsState = GLFW.glfwGetKey(window, GLFW.GLFW_KEY_CAPS_LOCK);
         boolean capsLockPressed = (capsState == GLFW.GLFW_PRESS);
 
@@ -51,20 +34,12 @@ public class AutoClickerClient implements ClientModInitializer {
         }
         capsLockWasPressed = capsLockPressed;
 
-        // Perform auto click
-        if (autoClickEnabled && robot != null) {
+        if (autoClickEnabled && client.currentScreen == null) {
             tickCounter++;
             if (tickCounter >= TICKS_PER_CLICK) {
                 tickCounter = 0;
-                performClick(client);
+                client.doAttack();
             }
         }
-    }
-
-    private void performClick(MinecraftClient client) {
-        if (client.currentScreen != null) return; // Don't click when a GUI is open
-
-        robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
-        robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
     }
 }
