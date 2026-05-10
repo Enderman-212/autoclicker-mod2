@@ -13,7 +13,7 @@ public class AutoClickerClient implements ClientModInitializer {
     private boolean autoClickEnabled = false;
     private boolean capsLockWasPressed = false;
     private int tickCounter = 0;
-    private static final int TICKS_PER_CLICK = 1;
+    private static final int TICKS_PER_CLICK = 2;
 
     @Override
     public void onInitializeClient() {
