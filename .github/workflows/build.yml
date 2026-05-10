@@ -1,0 +1,22 @@
+name: Build Mod
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+      - name: Grant execute permission for gradlew
+        run: chmod +x autoclicker-mod/gradlew
+      - name: Build with Gradle
+        run: cd autoclicker-mod && ./gradlew build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: autoclicker-mod
+          path: autoclicker-mod/build/libs/autoclicker-1.0.0.jar
